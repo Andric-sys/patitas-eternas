@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
-import { compare } from "bcrypt"
+import { compare } from "bcryptjs"
 import { findOne } from "@/lib/db"
 
 export const authOptions = {
@@ -69,6 +69,12 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 }
+
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }
+
+
 
 const handler = NextAuth(authOptions)
 
