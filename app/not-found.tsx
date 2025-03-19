@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
-//import { Suspense } from "react"
+import { Suspense } from "react"
 
 export default function NotFound() {
   return (
