@@ -3,13 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "../../auth/[...nextauth]/route"
 import { findOne, updateOne, toObjectId } from "@/lib/db"
 
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
-
-export async function GET(req: NextRequest, context: RouteParams) {
+export async function GET(req: NextRequest) {
   try {
     // Verificar autenticación
     const session = await getServerSession(authOptions)
@@ -17,7 +11,9 @@ export async function GET(req: NextRequest, context: RouteParams) {
       return NextResponse.json({ message: "No autorizado" }, { status: 401 })
     }
 
-    const id = context.params.id
+    // Extraer el ID de la URL
+    const url = new URL(req.url)
+    const id = url.pathname.split("/").pop() || ""
 
     // Obtener solicitud
     const application = await findOne("adoption_applications", { _id: toObjectId(id) })
@@ -38,7 +34,7 @@ export async function GET(req: NextRequest, context: RouteParams) {
   }
 }
 
-export async function PATCH(req: NextRequest, context: RouteParams) {
+export async function PATCH(req: NextRequest) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)
@@ -46,7 +42,9 @@ export async function PATCH(req: NextRequest, context: RouteParams) {
       return NextResponse.json({ message: "No autorizado" }, { status: 401 })
     }
 
-    const id = context.params.id
+    // Extraer el ID de la URL
+    const url = new URL(req.url)
+    const id = url.pathname.split("/").pop() || ""
 
     // Verificar si la solicitud existe
     const existingApplication = await findOne("adoption_applications", { _id: toObjectId(id) })
