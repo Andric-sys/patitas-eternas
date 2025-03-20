@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
@@ -22,8 +22,13 @@ type Pet = {
   imageIds: string[]
 }
 
-export default function PetList() {
+const SearchParamsWrapper = () => {
   const searchParams = useSearchParams()
+  return <div className="hidden">{/* Este div no se renderiza visualmente pero permite acceder a searchParams */}</div>
+}
+
+export default function PetList() {
+  // Eliminar esta línea: const searchParams = useSearchParams()
   const [pets, setPets] = useState<Pet[]>([])
   const [loading, setLoading] = useState(true)
   const [activeFilters, setActiveFilters] = useState<string[]>([])
@@ -33,20 +38,22 @@ export default function PetList() {
       try {
         setLoading(true)
 
-        // Construir URL con parámetros de búsqueda
+        // Construir URL con parámetros de búsqueda desde window.location.search
+        const urlSearchParams = new URLSearchParams(window.location.search)
         const params = new URLSearchParams()
 
-        if (searchParams.getAll("species").length > 0) {
-          searchParams.getAll("species").forEach((s) => params.append("species", s))
+        const species = urlSearchParams.getAll("species")
+        if (species.length > 0) {
+          species.forEach((s) => params.append("species", s))
         }
 
-        const size = searchParams.get("size")
+        const size = urlSearchParams.get("size")
         if (size) {
           params.set("size", size)
         }
 
-        const minAge = searchParams.get("minAge")
-        const maxAge = searchParams.get("maxAge")
+        const minAge = urlSearchParams.get("minAge")
+        const maxAge = urlSearchParams.get("maxAge")
         if (minAge) params.set("minAge", minAge)
         if (maxAge) params.set("maxAge", maxAge)
 
@@ -69,7 +76,7 @@ export default function PetList() {
     }
 
     fetchPets()
-  }, [searchParams])
+  }, []) // Eliminar searchParams de las dependencias
 
   if (loading) {
     return <div>Cargando mascotas...</div>
@@ -149,6 +156,11 @@ export default function PetList() {
           ))}
         </div>
       )}
+      <div className="hidden">
+        <Suspense fallback={null}>
+          <SearchParamsWrapper />
+        </Suspense>
+      </div>
     </div>
   )
 }

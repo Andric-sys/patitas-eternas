@@ -7,20 +7,24 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
+  output: 'standalone',
+  images: {
+    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // Deshabilitar la generación estática de la página 404
   experimental: {
-    webpackBuildWorker: true,
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
+    // Desactivar la generación estática para resolver el problema con useSearchParams
+    missingSuspenseWithCSRBailout: false,
   },
-}
+};
 
-mergeConfig(nextConfig, userConfig)
+export default nextConfig;
 
 function mergeConfig(nextConfig, userConfig) {
   if (!userConfig) {

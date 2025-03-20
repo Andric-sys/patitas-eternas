@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -13,11 +13,24 @@ import { Filter, X } from "lucide-react"
 
 export default function PetFilters() {
   const router = useRouter()
-  const searchParams = useSearchParams()
 
-  const [species, setSpecies] = useState<string[]>([searchParams.get("species") || ""].filter(Boolean))
+  const SearchParamsWrapper = () => {
+    const searchParams = useSearchParams()
+    return searchParams
+  }
 
-  const [size, setSize] = useState<string>(searchParams.get("size") || "")
+  const [species, setSpecies] = useState<string[]>([])
+
+  // Usa un efecto para inicializar species después del renderizado
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const speciesParam = params.get("species") || ""
+    if (speciesParam) {
+      setSpecies([speciesParam])
+    }
+  }, [])
+
+  const [size, setSize] = useState<string>(new URLSearchParams(window.location.search).get("size") || "")
   const [age, setAge] = useState<number[]>([0, 15])
   const [expanded, setExpanded] = useState(true)
 
