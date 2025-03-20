@@ -3,9 +3,15 @@ import { getImageById, deleteImageById } from "@/lib/gridfs"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../auth/[...nextauth]/route"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+interface RouteParams {
+  params: {
+    id: string
+  }
+}
+
+export async function GET(req: NextRequest, context: RouteParams) {
   try {
-    const id = params.id
+    const id = context.params.id
     const result = await getImageById(id)
 
     if (!result) {
@@ -41,7 +47,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: RouteParams) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)
@@ -49,7 +55,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ message: "No autorizado" }, { status: 401 })
     }
 
-    const id = params.id
+    const id = context.params.id
     const success = await deleteImageById(id)
 
     if (!success) {

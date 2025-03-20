@@ -4,9 +4,15 @@ import { authOptions } from "../../auth/[...nextauth]/route"
 import { findOne, updateOne, deleteOne, toObjectId } from "@/lib/db"
 import { PetSchema } from "@/lib/models"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+interface RouteParams {
+  params: {
+    id: string
+  }
+}
+
+export async function GET(req: NextRequest, context: RouteParams) {
   try {
-    const id = params.id
+    const id = context.params.id
 
     // Obtener mascota
     const pet = await findOne("pets", { _id: toObjectId(id) })
@@ -22,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, context: RouteParams) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)
@@ -30,7 +36,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ message: "No autorizado" }, { status: 401 })
     }
 
-    const id = params.id
+    const id = context.params.id
 
     // Verificar si la mascota existe
     const existingPet = await findOne("pets", { _id: toObjectId(id) })
@@ -40,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     // Obtener datos de la solicitud
-    const petData = await request.json()
+    const petData = await req.json()
 
     // Validar con Zod
     const result = PetSchema.safeParse({
@@ -68,7 +74,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: RouteParams) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)
@@ -76,7 +82,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ message: "No autorizado" }, { status: 401 })
     }
 
-    const id = params.id
+    const id = context.params.id
 
     // Verificar si la mascota existe
     const existingPet = await findOne("pets", { _id: toObjectId(id) })

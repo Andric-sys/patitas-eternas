@@ -3,7 +3,13 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "../../auth/[...nextauth]/route"
 import { findOne, updateOne, toObjectId } from "@/lib/db"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+interface RouteParams {
+  params: {
+    id: string
+  }
+}
+
+export async function GET(req: NextRequest, context: RouteParams) {
   try {
     // Verificar autenticación
     const session = await getServerSession(authOptions)
@@ -11,7 +17,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ message: "No autorizado" }, { status: 401 })
     }
 
-    const id = params.id
+    const id = context.params.id
 
     // Obtener solicitud
     const application = await findOne("adoption_applications", { _id: toObjectId(id) })
@@ -32,7 +38,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, context: RouteParams) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)
@@ -40,7 +46,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return NextResponse.json({ message: "No autorizado" }, { status: 401 })
     }
 
-    const id = params.id
+    const id = context.params.id
 
     // Verificar si la solicitud existe
     const existingApplication = await findOne("adoption_applications", { _id: toObjectId(id) })
@@ -50,7 +56,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
 
     // Obtener datos de la solicitud
-    const { status } = await request.json()
+    const { status } = await req.json()
 
     // Validar estado
     if (!["pending", "approved", "rejected"].includes(status)) {
