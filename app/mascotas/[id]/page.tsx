@@ -6,10 +6,28 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Heart, Share2, ArrowLeft, PawPrint, Mail } from "lucide-react"
 import AdoptionForm from "@/components/adoption-form"
 
-// Cambiar la función getPet para que devuelva una promesa
-async function getPet(id: string) {
+// Definir los tipos para la mascota
+interface Pet {
+  id: string
+  name: string
+  species: "dog" | "cat"
+  breed: string
+  age: number
+  size: "small" | "medium" | "large"
+  gender: "male" | "female"
+  location: string
+  description: string
+  characteristics: string[]
+  healthStatus: string[]
+  imageIds: string[]
+}
+
+// Función para obtener los datos de la mascota
+async function getPetData(id: string): Promise<Pet | null> {
   try {
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/pets/${id}`, { next: { revalidate: 60 } })
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/pets/${id}`, {
+      next: { revalidate: 60 },
+    })
 
     if (!response.ok) {
       return null
@@ -22,9 +40,13 @@ async function getPet(id: string) {
   }
 }
 
-// Modificar la función de la página para usar await con getPet
-export default async function PetDetailPage({ params }: { params: { id: string } }) {
-  const pet = await getPet(params.id)
+// Componente de la página
+export default async function PetDetailPage({
+  params,
+}: {
+  params: { id: string }
+}) {
+  const pet = await getPetData(params.id)
 
   if (!pet) {
     notFound()
@@ -41,8 +63,6 @@ export default async function PetDetailPage({ params }: { params: { id: string }
         {/* Left Column - Images */}
         <div className="lg:col-span-2">
           <div className="relative rounded-lg overflow-hidden h-[400px] md:h-[500px]">
-            {/* Actualizar la renderización de imágenes para usar la API de imágenes */}
-            {/* Reemplazar la línea de Image con: */}
             <Image
               src={
                 pet.imageIds && pet.imageIds.length > 0
