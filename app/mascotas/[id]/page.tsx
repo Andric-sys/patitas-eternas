@@ -6,8 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Heart, Share2, ArrowLeft, PawPrint, Mail } from "lucide-react"
 import AdoptionForm from "@/components/adoption-form"
 
-// Actualizar la función getPet para obtener datos de la API
-
+// Cambiar la función getPet para que devuelva una promesa
 async function getPet(id: string) {
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/pets/${id}`, { next: { revalidate: 60 } })
@@ -23,8 +22,9 @@ async function getPet(id: string) {
   }
 }
 
-export default function PetDetailPage({ params }: { params: { id: string } }) {
-  const pet = getPet(params.id)
+// Modificar la función de la página para usar await con getPet
+export default async function PetDetailPage({ params }: { params: { id: string } }) {
+  const pet = await getPet(params.id)
 
   if (!pet) {
     notFound()
