@@ -6,24 +6,18 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Heart, Share2, ArrowLeft, PawPrint, Mail } from "lucide-react"
 import AdoptionForm from "@/components/adoption-form"
 
-// Definir los tipos para la mascota
-interface Pet {
+// Definir la interfaz para los parámetros de la página
+interface PageParams {
   id: string
-  name: string
-  species: "dog" | "cat"
-  breed: string
-  age: number
-  size: "small" | "medium" | "large"
-  gender: "male" | "female"
-  location: string
-  description: string
-  characteristics: string[]
-  healthStatus: string[]
-  imageIds: string[]
+}
+
+// Definir la interfaz para las propiedades de la página
+interface PageProps {
+  params: PageParams
 }
 
 // Función para obtener los datos de la mascota
-async function getPetData(id: string): Promise<Pet | null> {
+async function getPetData(id: string) {
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/pets/${id}`, {
       next: { revalidate: 60 },
@@ -41,11 +35,7 @@ async function getPetData(id: string): Promise<Pet | null> {
 }
 
 // Componente de la página
-export default async function PetDetailPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default async function PetDetailPage({ params }: PageProps) {
   const pet = await getPetData(params.id)
 
   if (!pet) {
@@ -121,7 +111,7 @@ export default async function PetDetailPage({
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Características</h2>
               <div className="flex flex-wrap gap-2">
-                {pet.characteristics.map((trait, index) => (
+                {pet.characteristics.map((trait: string, index: number) => (
                   <Badge key={index} variant="secondary" className="bg-navy-50 text-navy-800">
                     {trait}
                   </Badge>
@@ -132,7 +122,7 @@ export default async function PetDetailPage({
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-2">Estado de Salud</h2>
               <div className="flex flex-wrap gap-2">
-                {pet.healthStatus.map((status, index) => (
+                {pet.healthStatus.map((status: string, index: number) => (
                   <Badge key={index} variant="secondary" className="bg-green-50 text-green-700">
                     {status}
                   </Badge>
@@ -156,9 +146,16 @@ export default async function PetDetailPage({
       {/* Adoption Form Section */}
       <div className="mt-12 bg-gray-50 rounded-lg p-6 md:p-8">
         <h2 className="text-2xl font-bold text-navy-900 mb-6">Solicitar Adopción</h2>
-        <AdoptionForm petId={pet.id} petName={pet.name} />
+        <AdoptionForm petId={pet.id || pet._id} petName={pet.name} />
       </div>
     </div>
   )
+}
+
+// Generar parámetros estáticos para la página
+export async function generateStaticParams() {
+  // En un caso real, obtendrías todos los IDs de mascotas disponibles
+  // Para simplificar, devolvemos un array vacío
+  return []
 }
 
