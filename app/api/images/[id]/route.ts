@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getImageById, deleteImageById } from "@/lib/gridfs"
 import { getServerSession } from "next-auth"
-import { authOptions } from "../../auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 
 export async function GET(req: NextRequest) {
   try {

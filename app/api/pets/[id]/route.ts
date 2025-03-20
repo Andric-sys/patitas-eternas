@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
-import { authOptions } from "../../auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { findOne, updateOne, deleteOne, toObjectId } from "@/lib/db"
 import { PetSchema } from "@/lib/models"
 

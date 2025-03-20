@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
-import { authOptions } from "../auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { findMany, insertOne } from "@/lib/db"
 import { AdoptionApplicationSchema } from "@/lib/models"
 
