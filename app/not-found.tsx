@@ -1,19 +1,57 @@
 export default function NotFound() {
   return (
-    <div className="container flex flex-col items-center justify-center min-h-[70vh] px-4 py-16 text-center">
-      <h1 className="text-6xl font-bold text-navy-900 mb-4">404</h1>
-      <h2 className="text-2xl font-semibold text-navy-800 mb-6">Página no encontrada</h2>
-      <p className="text-gray-600 max-w-md mb-8">
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "70vh",
+        padding: "1rem",
+        textAlign: "center",
+      }}
+    >
+      <h1
+        style={{
+          fontSize: "3.75rem",
+          fontWeight: "bold",
+          color: "#1a2234",
+          marginBottom: "1rem",
+        }}
+      >
+        404
+      </h1>
+      <h2
+        style={{
+          fontSize: "1.5rem",
+          fontWeight: "semibold",
+          color: "#2d3a4f",
+          marginBottom: "1.5rem",
+        }}
+      >
+        Página no encontrada
+      </h2>
+      <p
+        style={{
+          color: "#4b5563",
+          maxWidth: "28rem",
+          marginBottom: "2rem",
+        }}
+      >
         Lo sentimos, la página que estás buscando no existe o ha sido movida.
       </p>
-      <a href="/" className="bg-navy-800 hover:bg-navy-900 text-white py-2 px-4 rounded-md inline-flex items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
-          <path
-            fillRule="evenodd"
-            d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
+      <a
+        href="/"
+        style={{
+          backgroundColor: "#2d3a4f",
+          color: "white",
+          padding: "0.5rem 1rem",
+          borderRadius: "0.375rem",
+          textDecoration: "none",
+          display: "inline-flex",
+          alignItems: "center",
+        }}
+      >
         Volver al inicio
       </a>
     </div>
