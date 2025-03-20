@@ -3,7 +3,7 @@ import { getImageById, deleteImageById } from "@/lib/gridfs"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../auth/[...nextauth]/route"
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = params.id
     const result = await getImageById(id)
@@ -41,7 +41,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)

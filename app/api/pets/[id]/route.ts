@@ -4,7 +4,7 @@ import { authOptions } from "../../auth/[...nextauth]/route"
 import { findOne, updateOne, deleteOne, toObjectId } from "@/lib/db"
 import { PetSchema } from "@/lib/models"
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const id = params.id
 
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)
@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     }
 
     // Obtener datos de la solicitud
-    const petData = await req.json()
+    const petData = await request.json()
 
     // Validar con Zod
     const result = PetSchema.safeParse({
@@ -68,7 +68,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)

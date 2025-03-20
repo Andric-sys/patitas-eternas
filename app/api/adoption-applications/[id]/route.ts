@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "../../auth/[...nextauth]/route"
 import { findOne, updateOne, toObjectId } from "@/lib/db"
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verificar autenticación
     const session = await getServerSession(authOptions)
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     // Verificar autenticación y permisos
     const session = await getServerSession(authOptions)
@@ -50,7 +50,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     // Obtener datos de la solicitud
-    const { status } = await req.json()
+    const { status } = await request.json()
 
     // Validar estado
     if (!["pending", "approved", "rejected"].includes(status)) {
